@@ -9,9 +9,10 @@ import java.util.Set;
  */
 public class LengthOfLongestSubString {
 
-    public int lengthOfLongestSubstring(String s) {
-        Set<Character> charactersSoFar = new HashSet<>();
+    public int lengthOfLongestSubstring(String string) {
+        boolean[] charactersSoFar = new boolean[128];
         int[] skipCharacters = new int[128];
+        char[] s = string.toCharArray();
         for (int i = 0; i < skipCharacters.length; i ++)
             skipCharacters[i] = -1;
 
@@ -19,23 +20,23 @@ public class LengthOfLongestSubString {
         int currentLength = 0;
         int i = 0;
         int oldStart = 0;
-        while(i < s.length()) {
-            while(i < s.length() && !charactersSoFar.contains(s.charAt(i)) ) {
-                charactersSoFar.add(s.charAt(i));
-                skipCharacters[(int)s.charAt(i)] = i;
+        while(i < s.length) {
+            while(i < s.length && !charactersSoFar[s[i]] ) {
+                charactersSoFar[s[i]] = true;
+                skipCharacters[(int)s[i]] = i;
                 currentLength++;
                 i++;
             }
             length = Math.max(length, currentLength);
 
-            if (i < s.length()) {
-                int newStart = skipCharacters[s.charAt(i)] + 1;
+            if (i < s.length) {
+                int newStart = skipCharacters[s[i]] + 1;
                 currentLength = i - newStart + 1;
-                skipCharacters[s.charAt(i)] = i;
+                skipCharacters[s[i]] = i;
                 for(int j = oldStart; j < newStart ; j++) {
-                    charactersSoFar.remove(s.charAt(j));
+                    charactersSoFar[s[j]] = false;
                 }
-                charactersSoFar.add(s.charAt(i));
+                charactersSoFar[s[i]] = true;
                 oldStart = newStart;
                 i++;
             }
