@@ -10,7 +10,7 @@ import java.util.Set;
 public class LengthOfLongestSubString {
 
     public int lengthOfLongestSubstring(String string) {
-        boolean[] charactersSoFar = new boolean[128];
+        //boolean[] charactersSoFar = new boolean[128];
         int[] skipCharacters = new int[128];
         char[] s = string.toCharArray();
         for (int i = 0; i < skipCharacters.length; i ++)
@@ -21,9 +21,8 @@ public class LengthOfLongestSubString {
         int i = 0;
         int oldStart = 0;
         while(i < s.length) {
-            while(i < s.length && !charactersSoFar[s[i]] ) {
-                charactersSoFar[s[i]] = true;
-                skipCharacters[(int)s[i]] = i;
+            while(i < s.length && skipCharacters[s[i]] == -1 ) {
+                skipCharacters[s[i]] = i;
                 currentLength++;
                 i++;
             }
@@ -34,9 +33,9 @@ public class LengthOfLongestSubString {
                 currentLength = i - newStart + 1;
                 skipCharacters[s[i]] = i;
                 for(int j = oldStart; j < newStart ; j++) {
-                    charactersSoFar[s[j]] = false;
+                    skipCharacters[s[j]] = -1;
                 }
-                charactersSoFar[s[i]] = true;
+                skipCharacters[s[i]] = i;
                 oldStart = newStart;
                 i++;
             }
