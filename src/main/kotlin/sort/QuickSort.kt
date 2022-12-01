@@ -1,62 +1,60 @@
 package sort
 
+import java.lang.Math.random
 import java.util.*
+import kotlin.math.roundToInt
+import kotlin.time.ExperimentalTime
+import kotlin.time.measureTime
 
 class QuickSort {
 
-    data class Range(val lo: Int, val hi: Int)
-    val rangeStack = Stack<Range>()
-
-    fun sort(list: IntArray) {
-        if (list.size > 1) _sortIterative(list, 0, list.size - 1)
-    }
-
-    private fun _sortIterative(list: IntArray, lo: Int, hi: Int) {
-        rangeStack.push(Range(lo, hi))
-        while (rangeStack.isNotEmpty()) {
-            val range = rangeStack.pop()
-            if (range.lo < range.hi && range.lo >= 0) {
-                val pivot = findPivot(list, range.lo, range.hi)
-                rangeStack.push(Range(range.lo, pivot - 1))
-                rangeStack.push(Range(pivot + 1, range.hi))
+    fun quickSort(list: IntArray, lo: Int, hi: Int) {
+        val stack = Stack<Int>()
+        stack.push(lo)
+        stack.push(hi)
+        while (stack.isNotEmpty()) {
+            var hi = stack.pop()
+            var lo = stack.pop()
+            val pivot = partition(list, lo, hi)
+            if (pivot - 1 > lo) {
+                stack.push(lo)
+                stack.push(pivot - 1)
+            }
+            if (pivot + 1 < hi) {
+                stack.push(pivot + 1)
+                stack.push(hi)
             }
         }
     }
 
-    private fun _sortRecursive(list: IntArray, lo: Int, hi: Int) {
-        if (lo >= hi || lo < 0)
-            return
-        var pivot = findPivot(list, lo, hi)
-        _sortRecursive(list, lo, pivot - 1)
-        _sortRecursive(list, pivot + 1, hi)
-    }
-
-    private fun findPivot(list: IntArray, lo: Int, hi: Int): Int {
-        var pivot = list[hi]
+    private fun partition(list: IntArray, lo: Int, hi: Int): Int {
+        val pivot = list[hi]
         var i = lo - 1
         for (j in lo until hi) {
-            if (list[j] <= pivot) {
+            if (list[j] < pivot) {
                 i++
-                val tmp = list[j]
-                list[j] = list[i]
-                list[i] = tmp
+                val tmp = list[i]
+                list[i] = list[j]
+                list[j] = tmp
             }
         }
         i++
-        val tmp = list[hi]
-        list[hi] = list[i]
-        list[i] = tmp
+        val tmp = list[i]
+        list[i] = list[hi]
+        list[hi] = tmp
         return i
     }
 
 
     companion object {
+        @OptIn(ExperimentalTime::class)
         @JvmStatic
         fun main(args: Array<String>) {
-            var values = intArrayOf(3, 6, 3, 8, 9, 10, -1, 3, 2, -10, -20, 0)
-            QuickSort().sort(values)
-            println(values.contentToString())
-
+            var values = IntArray(1000000) { i -> random().roundToInt() }
+            val randomized = measureTime {
+                QuickSort().quickSort(values, 0, values.size - 1)
+            }
+            println("Iterative took: $randomized")
         }
     }
 }
