@@ -42,7 +42,7 @@ class Graph {
     ): Int {
         var connectedComponents = 0
         for (node in graph.keys) {
-             if (!visited.contains(node)) {
+            if (!visited.contains(node)) {
                 connectedComponents++
                 explore(graph, node, visited)
             }
