@@ -7,6 +7,22 @@ import kotlin.collections.HashSet
 class Graph {
     companion object {
         @JvmStatic
+        fun createAdjacencyList(edges: Array<Pair<String, String>>): Map<String, Set<String>> {
+            val graph = HashMap<String, MutableSet<String>>()
+            for (edge in edges) {
+                if (!graph.containsKey(edge.first)) {
+                    graph[edge.first] = HashSet()
+                }
+                if (!graph.containsKey(edge.second)) {
+                    graph[edge.second] = HashSet()
+                }
+                graph[edge.first]?.add(edge.second)
+                graph[edge.second]?.add(edge.first)
+            }
+            return graph
+        }
+
+        @JvmStatic
         fun main(args: Array<String>) {
             val graph = Graph()
 //            graph.breadthFirst()
@@ -94,20 +110,7 @@ class Graph {
         return false
     }
 
-    private fun createAdjacencyList(edges: Array<Pair<String, String>>): Map<String, Set<String>> {
-        val graph = HashMap<String, MutableSet<String>>()
-        for (edge in edges) {
-            if (!graph.containsKey(edge.first)) {
-                graph[edge.first] = HashSet()
-            }
-            if (!graph.containsKey(edge.second)) {
-                graph[edge.second] = HashSet()
-            }
-            graph[edge.first]?.add(edge.second)
-            graph[edge.second]?.add(edge.first)
-        }
-        return graph
-    }
+
 
     fun depthFirst(graph: HashMap<String, Set<String>>, source: String) {
         val stack = Stack<String>()
