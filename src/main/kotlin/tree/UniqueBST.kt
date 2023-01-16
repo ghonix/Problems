@@ -12,7 +12,6 @@ class UniqueBST {
     }
 
 
-
     data class TreeNode(val value: Int, val left: TreeNode?, val right: TreeNode?)
 
 
@@ -20,19 +19,27 @@ class UniqueBST {
         if (n == 0) {
             return LinkedList<TreeNode>()
         }
-        return generateTrees(1, n)
+        val memory = HashMap<Pair<Int, Int>, List<TreeNode>>()
+        return generateTrees(1, n, memory)
 
     }
 
-    private fun generateTrees(start: Int, end: Int): List<TreeNode?> {
+    private fun generateTrees(
+        start: Int, end: Int,
+        memory: HashMap<Pair<Int, Int>, List<TreeNode>>
+    ): List<TreeNode?> {
         val forest = LinkedList<TreeNode?>()
-        if(start > end) {
+        if (start > end) {
             forest.add(null)
         }
+        val solution = memory[Pair(start, end)]
+        if (solution != null) {
+            return solution
+        }
 
-        for (i in start .. end) {
-            val leftForest = generateTrees(start, i-1)
-            val rightForest = generateTrees( i+1, end)
+        for (i in start..end) {
+            val leftForest = generateTrees(start, i - 1, memory)
+            val rightForest = generateTrees(i + 1, end, memory)
 
             for (left in leftForest) {
                 for (right in rightForest) {
