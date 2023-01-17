@@ -20,13 +20,13 @@ class Solution {
                 end = i + maxI / 2
             }
         }
-        return s.substring(start, end)
+        return s.substring(start, end + 1)
     }
 
     private fun expandAroundCenter(s: String, l: Int, r: Int): Int {
         var left = l
         var right = r
-        while (left > 0 && right < s.length && s[left] == s[right]) {
+        while (left >= 0 && right < s.length && s[left] == s[right]) {
             left--
             right++
         }
@@ -37,7 +37,8 @@ class Solution {
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
-
+            val result = Solution().longestPalindrome("babad")
+            println(result)
         }
     }
 
