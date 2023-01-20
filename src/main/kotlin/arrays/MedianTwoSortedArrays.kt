@@ -1,3 +1,5 @@
+package arrays
+
 /**
  * https://leetcode.com/problems/median-of-two-sorted-arrays/#/description
  * Created by aghoneim on 4/18/17.
