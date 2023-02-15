@@ -8,8 +8,50 @@ class DashSchedule {
         val profit: Int
     )
 
+    fun jobSchedulingRecursive2(startTime: IntArray, endTime: IntArray, profit: IntArray): Int {
+        val jobs = getJobs(startTime, endTime, profit)
+
+        jobs.sortBy { it.startTime }
+        val index = 0
+        var memory = IntArray(jobs.size) { 0 }
+        return getMaxProfit2(index, jobs, memory)
+    }
+
+    private fun getMaxProfit2(index: Int, jobs: Array<DashOrder>, memory: IntArray): Int {
+        if (index >= jobs.size) {
+            return 0
+        } else if (index == jobs.size - 1) {
+            memory[index] = jobs[index].profit
+            return memory[index]
+        } else if (memory[index] > 0) {
+            return memory[index]
+        } else {
+            val nextJobIndex = getNextJob(jobs[index].endTime, jobs)
+            memory[index] = max( jobs[index].profit + getMaxProfit2(nextJobIndex, jobs, memory),
+                getMaxProfit2(index + 1, jobs, memory))
+            return memory[index]
+        }
+    }
+
+    private fun getNextJob(endTime: Int, jobs: Array<DashOrder>): Int {
+        var start = 0
+        var end = jobs.size - 1
+        var nextIndex = jobs.size
+        while (start <= end) {
+            var middle = (end + start)/2
+            if (jobs[middle].startTime >= endTime) {
+                nextIndex = middle
+                end = middle - 1
+            } else {
+                start = middle + 1
+            }
+        }
+        return nextIndex
+    }
+
+
     fun jobScheduling(startTime: IntArray, endTime: IntArray, profit: IntArray): Int {
-        return jobSchedulingIterative(startTime, endTime, profit)
+        return jobSchedulingRecursive2(startTime, endTime, profit)
     }
 
     private fun jobSchedulingRecursive(startTime: IntArray, endTime: IntArray, profit: IntArray): Int {
@@ -66,7 +108,7 @@ class DashSchedule {
         val memory = IntArray(orders.size) { -1 }
         var maxProfit = orders[index].profit
         memory[index] = orders[index].profit
-        index --
+        index--
 
         while (index >= 0) {
             val nextIndex = findNextOrder(orders[index].endTime, orders)
@@ -77,7 +119,7 @@ class DashSchedule {
             }
             maxProfit = max(maxProfit, orders[index].profit + nextProfit)
             memory[index] = maxProfit
-            index --
+            index--
         }
         return maxProfit
     }
