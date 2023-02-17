@@ -1,9 +1,9 @@
 class LFUCache(val capacity: Int) {
 
-    val dictionary = HashMap<Int, Pair<Int, Int>>()
-    val frequencies = HashMap<Int, LinkedHashSet<Int>>()
+    private val dictionary = HashMap<Int, Pair<Int, Int>>()
+    private val frequencies = HashMap<Int, LinkedHashSet<Int>>()
 
-    var minFrequency = 0
+    private var minFrequency = 0
 
     fun get(key: Int): Int {
         val v = dictionary[key] ?: return -1
