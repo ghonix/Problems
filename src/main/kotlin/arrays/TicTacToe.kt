@@ -52,6 +52,7 @@ class TicTacToe(val n: Int) {
                 c += dc
             }
 
+            // reverse
             dr *= -1
             dc *= -1
             r = row + dr

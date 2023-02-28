@@ -8,6 +8,7 @@ internal interface EventListener {
 
 internal class EventManager {
     var eventMap: MutableMap<String, MutableList<EventListener>> = HashMap()
+
     @Synchronized
     fun addListener(event: String, listener: EventListener) { // O(1)
         var eventListeners = eventMap[event]
@@ -73,14 +74,13 @@ internal class ContactBadgeEventListener : EventListener {
     }
 }
 
-internal object Solution {
-    @JvmStatic
-    fun main(args: Array<String>) {
-        val eventManager = EventManager.instance
-        val listener: EventListener = ContactBadgeEventListener()
-        eventManager!!.addListener("CONTACTS_ADDED", listener)
-        eventManager.notify("RANDOM_EVENT")
-        eventManager.notify("CONTACTS_ADDED")
-        eventManager.notify("CONTACTS_ADDED")
-    }
+
+fun main(args: Array<String>) {
+    val eventManager = EventManager.instance
+    val listener: EventListener = ContactBadgeEventListener()
+    eventManager!!.addListener("CONTACTS_ADDED", listener)
+    eventManager.notify("RANDOM_EVENT")
+    eventManager.notify("CONTACTS_ADDED")
+    eventManager.notify("CONTACTS_ADDED")
+
 }

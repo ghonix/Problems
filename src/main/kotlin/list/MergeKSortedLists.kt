@@ -12,8 +12,8 @@ class MergeKSortedLists {
     }
 
     fun mergeKLists(lists: Array<ListNode?>): ListNode? {
-        var priorityQueue: Queue<ListNode> = PriorityQueue {
-            a, b -> a.`val` - b.`val`
+        var priorityQueue: Queue<ListNode> = PriorityQueue { a, b ->
+            a.`val` - b.`val`
         }
 
         for (i in lists.indices) {
