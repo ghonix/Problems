@@ -1,92 +1,68 @@
 package string
 
 class Chat {
+    private val dfa = hashMapOf(
+        Pair(0, Pair('c', 1)),
+        Pair(1, Pair('h', 2)),
+        Pair(2, Pair('a', 3)),
+        Pair(3, Pair('t', 4))
+    )
+    private val stateTokens = hashMapOf(
+        Pair('c', 0),
+        Pair('h', 1),
+        Pair('a', 2),
+        Pair('t', 3)
+    )
+    private val initialState = 0
+    private val validTerminalState = 4
+
+    private val stateMap = HashMap<Int, Int>()
 
 
-    fun main(args: Array<String>) {
-        println(minPlayers("chacthat"))
-        println(minPlayers("chaccthahtatchat"))
-        println(minPlayers("chatchht"))
-        println(minPlayers("chacthataaaa"))
-    }
-//
-    /*
-    inProgress = 1
-    c -> 1
-    h -> 1
-    a -> 1
-    t -> 1
-    */
-
-    fun minPlayers(s: String): Int {
-        var finished = 0
-        var inProgress = 0
-        val charMap = HashMap<Char, Int>()
-        for (char in arrayOf('c', 'h', 'a', 't')) {
-            charMap[char] = 0
-        }
-
-        // loop till end of string
-        // if detect start of chat
-        // if finished is non zero -> decrement it
-        // increment in progress
-        //
-
-        // if detect end of chat
-        // increment finished
-        // decrement in progress
-        for (i in s.indices) {
-            // detect a start
-            if (s[i] == 'c') {
-                charMap['c'] = charMap['c']!! + 1
-
-                if (finished > 0) {
-                    finished--
+    fun minPlayers(chat: String): Int {
+        for (token in chat) {
+            val state: Int = stateTokens[token] ?: return -1
+            if (state == initialState) {
+                if (stateMap[validTerminalState] != null && stateMap[validTerminalState]!! > 0) {
+                    stateMap[validTerminalState] = stateMap[validTerminalState]!!.dec()
                 }
-                inProgress++
-            } else if (s[i] == 't') {
-                charMap['t'] = charMap['t']!! - 1
-                if (inProgress <= 0) {
-                    // Error state
-                    return -1
-                } else {
-                    finished++
-                    inProgress--
-                }
-
-                var error = decrementMap(charMap)
-                if (error) {
-                    return -1
-                }
-            } else if ("ha".contains(s[i])) {
-                charMap[s[i]] = charMap[s[i]]!! + 1
+                stateMap[state] = 1
             }
-        }
+            val stateCount = stateMap[state]
+            if (stateCount != null && stateCount > 0) {
+                val transition = dfa[state]
+                if (transition != null && transition.first == token) {
+                    // one state can advance
+                    val currentStateCount = stateMap[state]
+                    if (currentStateCount != null && currentStateCount > 0) {
+                        stateMap[state] = currentStateCount - 1
+                    }
 
-        var error = verifyMap(charMap)
-        if (error) {
-            return -1
-        }
-        return finished
-    }
-
-    fun verifyMap(charMap: HashMap<Char, Int>): Boolean {
-        for (char in arrayOf('c', 'h', 'a', 't')) {
-            if (charMap[char]!! > 0) {
-                return true
-            }
-        }
-        return false
-    }
-
-    fun decrementMap(charMap: HashMap<Char, Int>): Boolean {
-        for (char in arrayOf('c', 'h', 'a', 't')) {
-            if (charMap[char] == 0) {
-                return true
+                    stateMap[transition.second] = stateMap[transition.second]?.inc() ?: 1
+                }
             } else {
-                charMap[char] = charMap[char]!! - 1
+                return -1
             }
         }
-        return false
+        return validateStates(stateMap)
     }
+
+    private fun validateStates(stateMap: java.util.HashMap<Int, Int>): Int {
+        for (entry in stateMap.entries) {
+            if (entry.key != validTerminalState && entry.value > 0) {
+                return -1
+            }
+        }
+
+        return stateMap[validTerminalState] ?: -1
+    }
+}
+
+fun main(args: Array<String>) {
+    println(
+        Chat().minPlayers("chacthat")
+    )
+    println(Chat().minPlayers("chaccthahtatchat"))
+    println(Chat().minPlayers("chatchht"))
+    println(Chat().minPlayers("chacthat"))
 }
