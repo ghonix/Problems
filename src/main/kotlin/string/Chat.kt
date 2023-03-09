@@ -23,8 +23,9 @@ class Chat {
         for (token in chat) {
             val state: Int = stateTokens[token] ?: return -1
             if (state == initialState) {
-                if (stateMap[validTerminalState] != null && stateMap[validTerminalState]!! > 0) {
-                    stateMap[validTerminalState] = stateMap[validTerminalState]!!.dec()
+                val currentTerminalStateCount = stateMap[validTerminalState]
+                if (currentTerminalStateCount != null && currentTerminalStateCount > 0) {
+                    stateMap[validTerminalState] = currentTerminalStateCount - 1
                 }
                 stateMap[state] = 1
             }

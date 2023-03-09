@@ -26,28 +26,28 @@ class KMP {
 
     private fun preCompute(pattern: String): Array<Int> {
         val lps = Array(pattern.length) { 0 }
-        var len = 0
+        var j = 0
         var i = 1
 
         while (i < pattern.length) {
-            if (pattern[i] == pattern[len]) {
-                len++
-                lps[i] = len
+            if (pattern[i] == pattern[j]) {
+                j++
+                lps[i] = j
                 i++
             } else {
-                if (len != 0) {
-                    len = lps[len - 1]
-                } else {
-                    lps[i] = len
+                if (j == 0) {
+                    lps[i] = j
                     i++
+                } else {
+                    j = lps[j - 1]
                 }
             }
         }
 
         return lps
     }
-//                                 i          1  2  3  3  4  5  6  7  7  8
-//                                len         0  1  0  0  0  1  2  3  2  3
+//                                 i       1  2  3  3  4  5  6  7  7  8
+//                                len      0  1  0  0  0  1  2  3  2  3
 //                             pattern[i]  a  a  a  c  c  a  a  a  a
 //                                lps[i]   0  1  2  0  0  1  2  3  3  3  4
 
