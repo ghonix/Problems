@@ -2,7 +2,6 @@ package arrays
 
 class MinTotalDistance {
     fun minTotalDistance(grid: Array<IntArray>): Int {
-        var minDistance = 0
         val rows = ArrayList<Int>()
         val cols = ArrayList<Int>()
 
@@ -21,7 +20,7 @@ class MinTotalDistance {
         return minDistance(rows) + minDistance(cols)
     }
 
-    fun minDistance(list: ArrayList<Int>): Int {
+    private fun minDistance(list: ArrayList<Int>): Int {
         var i = 0
         var j = list.size - 1
         var distance = 0
